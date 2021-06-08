@@ -1,0 +1,10 @@
+apiVersion: apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  name: SearchFilterApp # create a new TargetGroupBinding called SearchFilterApp
+  namespace: ns-tt
+spec:
+  serviceRef:
+    name: search-svc # route traffic to the search-svc
+    port: 80
+    targetGroupARN: arn:aws:elasticloadbalancing:ap-northeast-2:628713925309:targetgroup/299d173a-39cf2b1188636f513fa/6f39480a578cb824

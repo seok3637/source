@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: my-nginx
+  namespace: ns-tt
+spec:
+  selector:
+    matchLabels:        
+      app: web2
+  template:
+    metadata:
+      labels:
+        app: web2
+    spec:
+      nodeSelector: 
+        kops.k8s.io/instancegroup: nodes-ap-northeast-2c
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80

@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+  namespace: ns-tt
+spec:
+  serviceName: rabbitmq
+  replicas: 2
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      terminationGracePeriodSeconds: 10
+      imagePullSecrets:
+      - name: hub.docker.com
+      containers:
+      - name: rabbitmq
+        image: rabbitmq
+        imagePullPolicy: Always
+        ports:
+          - name: http
+            protocol: TCP
+            containerPort: 15672
+          - name: amqp
+            protocol: TCP
+            containerPort: 5672
+        readinessProbe:           
+          exec:                   
+            command: ["true"]     
+          initialDelaySeconds: 30 
+          timeoutSeconds: 5       
+        env:
+          - name: MY_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: RABBITMQ_NODENAME
+            value: "rabbit@$(MY_POD_NAME).rabbitmq.default.svc.cluster.local"
+          - name: RABBITMQ_USE_LONGNAME
+            value: "true"
+          - name: RABBITMQ_VM_MEMORY_HIGH_WATERMARK
+            value: "0.49"
+          - name: RABBITMQ_CLUSTER_PARTITION_HANDLING
+            value: pause_minority
+          - name: RABBITMQ_ERLANG_COOKIE
+            value: erlang-cookie-placeholder
+          - name: RABBITMQ_DEFAULT_USER
+            value: admin
+          - name: RABBITMQ_DEFAULT_PASS
+            value: admin
+          - name: AUTOCLUSTER_TYPE
+            value: "k8s"
+          - name: AUTOCLUSTER_DELAY
+            value: "10"
+          - name: AUTOCLUSTER_FAILURE
+            value: 'stop'
+          - name: AUTOCLUSTER_LOG_LEVEL
+            value: debug
+          - name: CLEANUP_WARN_ONLY
+            value: "false"
+          - name: K8S_ADDRESS_TYPE
+            value: "hostname"
+          - name: K8S_HOSTNAME_SUFFIX
+            value: ".rabbitmq.default.svc.cluster.local"
+        volumeMounts:
+          - name: rabbitmq-persistent-storage
+            mountPath: /var/lib/rabbitmq
+  volumeClaimTemplates:
+  - metadata:
+      name: rabbitmq-persistent-storage
+      annotations:
+        volume.beta.kubernetes.io/storage-class: standard
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 10Gi
