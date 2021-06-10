@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: ReplicatSet
+metadata:
+  name: nginx-replica
+  namespace: ns-tt
+spec:
+  selector:
+    matchLabels:        
+      name: web
+  template:
+    metadata:
+      labels:
+        name: web
+    spec:
+      nodeSelector: 
+        kops.k8s.io/instancegroup: nodes-ap-northeast-2a
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
