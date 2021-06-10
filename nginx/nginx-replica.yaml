@@ -1,16 +1,20 @@
 apiVersion: apps/v1
-kind: ReplicatSet
+kind: ReplicaSet
 metadata:
   name: nginx-replica
   namespace: ns-tt
+  labels:
+    app: web
+    tier: web
 spec:
+  replicas: 1
   selector:
     matchLabels:        
-      name: web
+      tier: web
   template:
     metadata:
       labels:
-        name: web
+        tier: web
     spec:
       nodeSelector: 
         kops.k8s.io/instancegroup: nodes-ap-northeast-2a
