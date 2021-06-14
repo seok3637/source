@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx
+  namespace: ns-tt
+  labels:
+    tier: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:        
+      tier: web
+  template:
+    metadata:
+      labels:
+        tier: web
+    spec:
+      containers:
+              - name: nginx:latest
+        image: nginx
+        ports:
+        - containerPort: 80
