@@ -16,7 +16,7 @@ spec:
         tier: web
     spec:
       containers:
-      - name: nginx:latest
+      - name: nginx
         image: nginx
         ports:
         - containerPort: 80
