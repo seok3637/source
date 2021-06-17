@@ -21,8 +21,8 @@ spec:
             - containerPort: 80
               name: http
               protocol: TCP
-              
----           
+
+---
 apiVersion: v1
 kind: Service
 metadata:
