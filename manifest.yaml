@@ -21,3 +21,18 @@ spec:
             - containerPort: 80
               name: http
               protocol: TCP
+              
+---           
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-services
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 80
+      protocol: TCP
+      name: nginx
+  selector:
+    app: nginx-svc
