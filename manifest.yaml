@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-deploy
-  namespace: ns-tt
 spec:
   replicas: 1
   selector:
